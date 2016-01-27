@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Simulateur Switch&Hub</title>
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <style type="text/css">
+          body { padding-top: 60px; }
+  </style>
+  </head>
+  <body>
+<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="container-fluid">
+	<div class="navbar-header">
+		<button type="button" class="navbar-toggle collapsed"
+		data-toggle="collapse" data-target="#mobile">
+		<span class="glyphicon glyphicon-menu-hamburger"></span>
+		</button>
+		<a class="navbar-brand" href="#">Simulateur Switch Hub</a>
+	</div>
+	<div class="collapse navbar-collapse" id="mobile">
+	<ul class="nav navbar-nav">
+		<li> <a href="#" id="creerExercice">Créer un exercice</a> </li>
+		<li> <a href="#" id="faireExercice">Réaliser un exercice</a> </li>
+		<li> <a href="#" id="tuto">Tutoriel</a> </li>
+	</ul>
+	<form class="navbar-form navbar-right inline-form">
+       <a href="#"><span class="glyphicon glyphicon-info-sign"></span></a>
+    </form>
+	</div>
+	</div>
+</nav>
+	<div id="contenu"></div>
+	<div id="message"></div>
+	<script>	
+	$(document).ready(function(){
+		//$("#faireExercice").click(faireExercice);
+		$("#contenu").html("");
+		$("#faireExercice").click(function(){$("#contenu").load('testemission.html');});
+	});	
+
+/*---LISTE---*/
+//	function faireExercice(){
+		//$.get(url,null,debutExercice,"xml");
+//	}
+	</script>
+  </body>
+</html>

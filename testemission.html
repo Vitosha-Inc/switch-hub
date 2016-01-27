@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Envoyer la trame</title>
+	    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<style>
+	</style>
+</head>
+<body>
+<div id="machine">
+</div>
+<div id="trame">
+<form id="emForm">
+<legend>Trame :</legend>
+<!--- La liste des machines sera chargée à partir du XML plus tard --->
+<select name='recepteur' id="recepteur">
+	<option value="Machine 1">Machine 1 : 00-C0-B0-69-16-11</option>
+	<option value="Machine 2">Machine 2 : 00-C0-B0-08-31-22</option>
+	<option value="Machine 3">Machine 3 : 00-10-2B-88-00-33</option>
+	<option value="Machine 4">Machine 4 : 00-00-48-24-E5-44</option>
+	<option value="Machine 5">Machine 5 : 00-AA-00-95-A0-55</option>
+	<option value="Machine 6">Machine 6 : 00-F0-00-6A-11-66</option>
+	<option value="Serveur A">Serveur A : 00-35-8A-96-01-AA</option>
+	<option value="Serveur B">Serveur B : 02-35-5A-66-64-BB</option>
+	<option value="Broadcast">Broadcast : FF-FF-FF-FF-FF-FF</option>
+</select>
+<select name='emetteur' id="emetteur">
+	<option value="Machine 1">Machine 1 : 00-C0-B0-69-16-11</option>
+	<option value="Machine 2">Machine 2 : 00-C0-B0-08-31-22</option>
+	<option value="Machine 3">Machine 3 : 00-10-2B-88-00-33</option>
+	<option value="Machine 4">Machine 4 : 00-00-48-24-E5-44</option>
+	<option value="Machine 5">Machine 5 : 00-AA-00-95-A0-55</option>
+	<option value="Machine 6">Machine 6 : 00-F0-00-6A-11-66</option>
+	<option value="Serveur A">Serveur A : 00-35-8A-96-01-AA</option>
+	<option value="Serveur B">Serveur B : 02-35-5A-66-64-BB</option>
+	<option value="Broadcast">Broadcast : FF-FF-FF-FF-FF-FF</option>
+</select>
+<input type="text" disabled="disabled" value="Couches supérieures"></input>
+<input type="text" disabled="disabled" value="FCS"></input></br>
+<input type="submit" name="valider_trame_debut" value="Valider"/>
+</form>
+</div>
+<script type="text/javascript">
+//Emetteur-Récepteur qui sera défini par le sujet de l'exercice
+var nomem = "Machine 1";
+var nomre = "Serveur A";
+
+document.getElementById("machine").innerHTML="<h2>"+nomem+"</h2>Emetteur :"+nomem+"</br>Récepteur :"+nomre;
+
+$(document).ready(function() {
+	$("#emForm").submit(function(event){
+		event.preventDefault();
+		console.log(emetteur.value+" = "+nomem);
+		console.log(recepteur.value+" = "+nomre);
+		if(nomem!=emetteur.value){
+			if(nomre!=recepteur.value){
+			window.alert("Les adresses de l'émetteur et du récepteur ne sont pas correctes!");
+			}else{
+			window.alert("L'adresse de l'émetteur n'est pas la bonne!");
+			}
+		}else{
+		if(nomre!=recepteur.value){
+			window.alert("L'adresse du récepteur n'est pas la bonne!");
+			}else{
+			window.alert("OK -> étape suivante");
+			}
+		}
+	});
+});
+//tableau qui sera chargé à partir du XML
+//var tab = {"Machine 1":"00-C0-B0-69-16-11","Machine 2":"00-C0-B0-69-16-11","Machine 3":"00-C0-B0-69-16-11","Machine 4":"00-C0-B0-69-16-11","Machine 5":"00-C0-B0-69-16-11","Machine 6":"00-C0-B0-69-16-11","Serveur A":"00-C0-B0-69-16-11","Serveur B":"00-C0-B0-69-16-11","Broadcast":"00-C0-B0-69-16-11"};
+</script>
+</body>
+</html>

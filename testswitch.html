@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Switch</title>
+	    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<style>
+	</style>
+</head>
+<body>
+<div id="machine">
+<h2>Switch</h2>
+</div>
+
+<div id="trame">
+<form id="trameRec">
+<legend>Trame reçue : </legend>
+<input type="text" disabled="disabled" value="adresse recepteur"></input>
+<input type="text" disabled="disabled" value="adresse emetteur"></input>
+<input type="text" disabled="disabled" value="Couches supérieures"></input>
+<input type="text" disabled="disabled" value="FCS"></input>
+</form>
+</div>
+
+<div id="tabAdresse">
+</div>
+
+<div id="ports">
+</div>
+
+<form>
+<input type="submit" name="valider_switch" value="Valider"/>
+</form>
+
+<script type="text/javascript">
+//Emetteur-Récepteur qui sera défini par le sujet de l'exercice
+var nomem = "Machine 1";
+var nomre = "Serveur A";
+
+document.getElementById("machine").innerHTML="<h2>"+nomem+"</h2>Emetteur :"+nomem+"</br>Récepteur :"+nomre;
+
+$(document).ready(function() {
+	$("#emForm").submit(function(event){
+		event.preventDefault();
+		console.log(emetteur.value+" = "+nomem);
+		console.log(recepteur.value+" = "+nomre);
+		if(nomem!=emetteur.value){
+			if(nomre!=recepteur.value){
+			window.alert("Les adresses de l'émetteur et du récepteur ne sont pas correctes!");
+			}else{
+			window.alert("L'adresse de l'émetteur n'est pas la bonne!");
+			}
+		}else{
+		if(nomre!=recepteur.value){
+			window.alert("L'adresse du récepteur n'est pas la bonne!");
+			}else{
+			window.alert("OK -> étape suivante");
+			}
+		}
+	});
+});
+</script>
+</body>
+</html>
