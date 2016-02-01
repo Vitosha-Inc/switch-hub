@@ -1,0 +1,13 @@
+﻿.bouton{
+	width:100px;
+	height:40px;
+	background-color:gray;
+	text-align:center;
+	line-height:40px;
+}
+.faux{
+	border:1px solid red;
+}
+.vraie{
+	border:1px solid green;
+}
