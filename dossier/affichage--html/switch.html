@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Switch</title>
+	    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<style>
+	body {
+	background-color:#821e46;
+	color:white;
+	}
+	
+	input{
+	color:#222;
+	}
+	
+	#tabAdresse table{
+	background-color:white;
+	color:#222;
+	border-width:3px;
+	border-style:solid;
+	border-color:#eee;
+	}
+	
+	#tabAdresse td{
+	border-width:3px;
+	border-style:solid;
+	border-color:#eee;
+	}
+	
+	#ports td{
+	width:80px;
+	}
+	
+	legend{
+	color:#fee;
+	font-size:14px;
+	}
+	
+	input[type=submit]{
+	background-color:#821e46;
+	border-color:white;
+	color:white;
+	font-size:15px;
+	}
+	
+	span{
+	color:#f99;
+	font-style:italic;
+	}
+	</style>
+</head>
+<body>
+<div id="machine">
+<h2>Switch</h2>
+</div>
+
+<div id="infos"></div><!--- Div provisoire pour indiquer le chemin de la trame --->
+
+<div id="trame" class="col-lg-12 col-xs-12">
+<form id="trameRec">
+<legend>Trame reçue : </legend>
+<input type="text" id="recepteur" disabled="disabled" value="adresse recepteur"></input>
+<input type="text" id="emetteur" disabled="disabled" value="adresse emetteur"></input>
+<input type="text" disabled="disabled" value="Couches supérieures"></input>
+<input type="text" disabled="disabled" value="FCS"></input>
+</form>
+</div>
+
+<div id="tabAdresse" class="col-lg-5 col-xs-5">
+<legend>Tableau des adresses MAC des machines connectées : </legend>
+<table>
+<tr><th>Adresse MAC</th>
+<th>Port</th></tr>
+<tr><td id="l1c1">1</td>
+<td id="l1c2">1</td></tr>
+<tr><td>2</td>
+<td>2</td></tr>
+<tr><td>3</td>
+<td>3</td></tr>
+<tr><td colspan=2>Adresse de la machine émetteur</td></tr>
+<tr><td>Adresse MAC</td>
+<td>Port</td></tr>
+<td><select name='emetteurSwitch' id="emetteurSwitch">
+	<option value="Machine 1">Machine 1 : 00-C0-B0-69-16-11</option>
+	<option value="Machine 2">Machine 2 : 00-C0-B0-08-31-22</option>
+	<option value="Machine 3">Machine 3 : 00-10-2B-88-00-33</option>
+	<option value="Machine 4">Machine 4 : 00-00-48-24-E5-44</option>
+	<option value="Machine 5">Machine 5 : 00-AA-00-95-A0-55</option>
+	<option value="Machine 6">Machine 6 : 00-F0-00-6A-11-66</option>
+	<option value="Serveur A">Serveur A : 00-35-8A-96-01-AA</option>
+	<option value="Serveur B">Serveur B : 02-35-5A-66-64-BB</option>
+	<option value="Broadcast">Broadcast : FF-FF-FF-FF-FF-FF</option>
+</select></td>
+<td><select name='port' id="port">
+	<option value="1">1</option>
+	<option value="2">2</option>
+	<option value="3">3</option>
+	<option value="4">4</option>
+</select></td>
+<tr><td>X</td>
+<td>X</td></tr>
+</table>
+</div>
+
+<div id="ports" class="col-lg-7 col-xs-7">
+<legend>Ports du matériel : </legend>
+<table>
+<tr>
+<th>Port 1</th>
+<th>Port 2</th>
+<th>Port 3</th>
+<th>Port 4</th>
+</tr>
+<tr>
+<td><input type="checkbox" id="p1r" value="p1r" name="valPorts"><label for="p1r">R</label><br>
+<input type="checkbox" id="p1t" value="p1t" name="valPorts"><label for="p1t">T</label></td>
+<td><input type="checkbox" id="p2r" value="p2r" name="valPorts"><label for="p2r">R</label><br>
+<input type="checkbox" id="p2t" value="p2t" name="valPorts"><label for="p2t">T</label></td>
+<td><input type="checkbox" id="p3r" value="p3r" name="valPorts"><label for="p3r">R</label><br>
+<input type="checkbox" id="p3t" value="p3t" name="valPorts"><label for="p3t">T</label></td>
+<td><input type="checkbox" id="p4r" value="p4r" name="valPorts"><label for="p4r">R</label><br>
+<input type="checkbox" id="p4t" value="p4t" name="valPorts"><label for="p4t">T</label></td>
+</tr>
+</table>
+</div>
+
+<form class="col-lg-12 col-xs-12">
+<input type="submit" id="validerSwitch" name="valider_switch" value="Valider"/>
+</form>
+
+<script type="text/javascript">
+//Emetteur-Récepteur qui sera défini par le sujet de l'exercice
+var nomEm = "Machine 1";
+var nomRe = "Serveur A";
+
+var adrEm = "00-C0-B0-69-16-11";
+var adrRe = "00-35-8A-96-01-AA";
+
+var portRe = "2";
+var portEm = "1";
+
+
+//Test Afficher ce qui doit être checked
+//reception
+var checkRec = "p"+portEm+"r";
+//console.log("checkbox : "+checkRec);
+//transmission
+var checkTrans = "p"+portRe+"t";
+//console.log("checkbox : "+checkTrans);
+//test checkboxes
+//Tableaux à comparer
+var tabCheck = new Array;//Valeurs attendues dans les checkboxes
+var tabProp = new Array;//Valeurs proposées par l'utilisateur
+
+
+$(document).ready(function() {
+//Partie qui sera intégrée dans la sidebar
+document.getElementById("machine").innerHTML="<h2>Switch</h2>Emetteur :"+nomEm+"</br>Récepteur :"+nomRe;
+document.getElementById("infos").innerHTML="La trame est reçue en <span>port "+portEm+"</span> et devrait être transmise en <span>port "+portRe+"</span>";
+document.getElementById("emetteur").setAttribute("value",adrEm);
+document.getElementById("recepteur").setAttribute("value",adrRe);
+
+//Tableau contenant les ports et la valeur attendue
+for(var i=0;i<8;i++){
+if(document.getElementsByName("valPorts")[i].value==checkRec || document.getElementsByName("valPorts")[i].value==checkTrans){
+tabCheck[i]=document.getElementsByName("valPorts")[i].value+" : "+true;
+}else{
+tabCheck[i]=document.getElementsByName("valPorts")[i].value+" : "+false;
+}
+}
+
+$("#validerSwitch").click(validerSwitch);
+
+});
+
+/*
+---Test Checkboxes---
+
+for(var k=0;k<8;k++){
+console.log(document.getElementsByName("valPorts")[k].value+" : "+document.getElementsByName("valPorts")[k].checked);
+}
+
+*/
+
+document.getElementById("ports").onclick=function(){(console.log("click!"))};//debug
+
+function validerSwitch(e){
+e.preventDefault();
+
+//---
+//test checkboxes
+//Valeurs checkboxes entrées par utilisateur
+for(var j=0;j<8;j++){
+tabProp[j] = document.getElementsByName("valPorts")[j].value+" : "+document.getElementsByName("valPorts")[j].checked;
+//console.log("vcu = "+document.getElementsByName("valPorts")[j].value+" : "+document.getElementsByName("valPorts")[j].checked);
+}
+
+//Affichage des tableaux pour debug
+//console.log(tabCheck);
+//console.log(tabProp);
+
+//Boucle de verification
+var erreur = 0; //compteur d'erreurs
+
+for(var k = 0;k<8;k++){
+if(tabCheck[k]!=tabProp[k]){
+erreur++;
+//console.log(k+" : "+erreur);
+}
+}
+//---
+
+//On teste si l'adresse MAC est bonne, si le port de réception est le bon et s'il n'y a pas d'erreurs pour le tableau des ports
+var message;
+if(emetteurSwitch.value==nomEm && port.value==portEm && erreur==0){
+console.log("ok");
+message = "Ok -> étape suivante";
+}else{
+console.log("nope");
+message = "Pb";
+if(emetteurSwitch.value!=nomEm){
+console.log("erreur adresse MAC");
+message += ", erreur adresse MAC";
+}
+if(port.value!=portEm){
+console.log("erreur port de réception");
+message += ", erreur port de réception";
+}
+if(erreur>0){
+console.log("nombre d'erreur dans Ports du matériel : "+erreur);
+message += ", nombre d'erreur dans Ports du matériel : "+erreur;
+}
+}
+window.alert(message);
+}
+</script>
+</body>
+</html>
