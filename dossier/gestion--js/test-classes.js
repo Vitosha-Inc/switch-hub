@@ -24,7 +24,7 @@ window.onload = function(){
 	//console.log(document.getElementById("machine_0"));
 	var machine_0 = document.getElementById("machine_0");
 	machine_0.addEventListener("mouseover", function(evt){ evt.target.setAttribute("fill", "red");});
-	machine_0.addEventListener("mouseout", function(evt){ evt.target.setAttribute("fill", "none");});
+	machine_0.addEventListener("mouseout", function(evt){ evt.target.setAttribute("fill", "white");});
 	machine_0.addEventListener("click", function(evt){ window.alert("ok");});
 	/*
 	var p1 = new Port(2);

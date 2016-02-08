@@ -19,34 +19,6 @@ console.log (c);//debug
 
 //initialisation de machines : parexemple 4 clients, 2 hubs, 1 switch et 2 serveurs
 //plus tard ces machines peuvent etre rassemblees dans un tableau
-var nbrClients = 4,
-	nbrHubs = 2,
-	nbrSwitches = 1,
-	nbrServeurs = 2,
-	adressesMAC = new Array(nbrClients + nbrServeurs),
-	//hubs = new Array(nbrHubs),
-	//switches = new Array(nbrSwitches);
-	
-	var machines = creerMachines(nbrClients, nbrServeurs, adressesMAC);
-	
-	//crée un tableau de machines 
-	function creerMachines(nbrClients, nbrServeurs, adressesMAC){
-		var machines = new Array(nbrClients + nbrServeurs),
-			nom;
-		for(var i = 0; i < machines.length; i++){
-			if(i < nbrClients){
-				nom = "client_" + i;
-				machines[i] = new MachineConnectee(nom, "client", c.niveau(0), i, adressesMAC[i]);
-			}else{
-				nom = "serveur_" + (machines.length - i-1);
-				machines[i] = new MachineConnectee(nom, "serveur", c.niveau(3), (machines.length - i-1), adressesMac[i]);
-			}
-		}
-	}
-	//crée un tableau de hubs
-	function creerHubs(nbrHubs){
-		
-	}
 
 var cl0 = new MachineConnectee("client_0", "client", c.niveau(0), 0, "MAC_cl_0");
 var cl1 = new MachineConnectee("client_1", "client", c.niveau(0), 1, "MAC_cl_1");

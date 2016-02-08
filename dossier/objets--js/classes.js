@@ -16,24 +16,30 @@ Port.prototype.getId = function(){
 Port.prototype.getEtat = function(){
 	return this.etat;
 }
-Port.prototype.estConnecte = function(){
+Port.prototype.getConnexion = function(){
 	return this.connexion;
 }
+
 //setters
 Port.prototype.setEtat = function(valeur){
 	this.etat = valeur;
 }
-Port.prototype.connecter = function(machine){
-	this.connexion = machine;
+Port.prototype.connecter = function(unite){
+	this.connexion = unite;
 }
 Port.prototype.deconnecter = function(){
 	this.connexion = false;
 }
+//others
+//dire si le port est connecté à une machine donnée 
+Port.prototype.estConnecte = function(machine){
+	return this.connexion == machine;
+}
 
 /*
-	La classe Machine
+	La classe Unite
 */
-var Machine = function Machine(nom, type, niveau, numPosition){
+var Unite = function Unite(nom, type, niveau, numPosition){
 	//verifier les parametres d'entree à faire...
 	this.nom = nom; // string
 	this.type = type; // "client" | "serveur" | "switch" | "hub"
@@ -42,54 +48,53 @@ var Machine = function Machine(nom, type, niveau, numPosition){
 	if (this.type == "client")
 		this.avatar = '<rect id="' + this.nom + '" x="' +this.position.getX()
 					+ '" y="' + this.position.getY() + '" width="' 
-					+ 2*ATOMX + '" height="' + 2*ATOMY + '" fill="none" stroke="gray" stroke-width="2"></rect>';
+					+ 2*ATOMX + '" height="' + 2*ATOMY + '" fill="white" stroke="gray" stroke-width="2"></rect>';
 					
 	if (this.type == "serveur")
 		this.avatar = '<rect id="' + this.nom + '" x="' +this.position.getX()+ '" y="' 
 					+ this.position.getY() + '" width="' 
-					+ 2*ATOMX + '" height="' + 4*ATOMY + '" fill="none" stroke="gray" stroke-width="2"></rect>';
+					+ 2*ATOMX + '" height="' + 4*ATOMY + '" fill="white" stroke="gray" stroke-width="2"></rect>';
 					
 	if (this.type == "switch")
 		this.avatar = '<rect id="' + this.nom + '" x="' +this.position.getX()
 					+ '" y="' + this.position.getY() + '" width="' 
-					+ 3*ATOMX + '" height="' + ATOMY + '" fill="none" stroke="blue" stroke-width="2"></rect>';
+					+ 3*ATOMX + '" height="' + ATOMY + '" fill="white" stroke="blue" stroke-width="2"></rect>';
 					
 	if (this.type == "hub")
 		this.avatar = '<rect id="' + this.nom + '" x="' +this.position.getX()+ '" y="' 
 					+ this.position.getY() + '" width="' 
-					+ 3*ATOMX + '" height="' + ATOMY + '" fill="none" stroke="green" stroke-width="2"></rect>';
+					+ 3*ATOMX + '" height="' + ATOMY + '" fill="white" stroke="green" stroke-width="2"></rect>';
 }
 /*
 	Methodes
 */
 //getters
-Machine.prototype.getNom = function(){
+Unite.prototype.getNom = function(){
 	return this.nom;
 }
-Machine.prototype.getType = function(){
+Unite.prototype.getType = function(){
 	return this.type;
 }
 //setters
-Machine.prototype.setType = function(type){
+Unite.prototype.setType = function(type){
 	this.type = type;
 }
 //autres
-Machine.prototype.afficher = function(elemParent){
+Unite.prototype.afficher = function(elemParent){
 	document.getElementById(elemParent).innerHTML += this.avatar;
 }
-//methode connecter qui permet de se connecter à un port
 
 /*
 	classe MachineConnectee
 */
 var MachineConnectee = function MachineConnectee(nom, type, niveau, numPosition, mac){
 	//verifier les parametres d'entree à faire...
-	Machine.call(this, nom, type, niveau, numPosition);
+	Unite.call(this, nom, type, niveau, numPosition);
 	
 	this.role = false; // false si non défini | "emetteur" | "recepteur"
 	this.mac = mac; //string adresse MAC de la machine
 }
-MachineConnectee.prototype = Object.create(Machine.prototype);
+MachineConnectee.prototype = Object.create(Unite.prototype);
 MachineConnectee.prototype.constructor = MachineConnectee;
 /*
 	Methodes
@@ -107,29 +112,29 @@ MachineConnectee.prototype.setRole = function(role){
 }
 
 /*
-	La classe MachineConnecteur
+	La classe Materiel
 */
-var MachineConnecteur = function MachineConnecteur(nom, type, niveau, numPosition, nbrPorts){
+var Materiel = function Materiel(nom, type, niveau, numPosition, nbrPorts){
 	//verifier les parametres d'entree à faire...
-	Machine.call(this, nom, type, niveau, numPosition);
+	Unite.call(this, nom, type, niveau, numPosition);
 	
 	this.nbrPorts = nbrPorts; // integer
 	this.ports = new Array(this.nbrPorts); // tableau de ports
 	this.ctr = 0; // compter le nombre de ports définis dans le tableau
 }
-MachineConnecteur.prototype = Object.create(Machine.prototype);
-MachineConnecteur.prototype.constructor = MachineConnecteur;
+Materiel.prototype = Object.create(Unite.prototype);
+Materiel.prototype.constructor = Materiel;
 /*
 	Methodes
 */
 //getters
-MachineConnecteur.prototype.getNbrPorts = function(){
+Materiel.prototype.getNbrPorts = function(){
 	return this.nbrPorts;
 }
-MachineConnecteur.prototype.getPorts = function(){
+Materiel.prototype.getPorts = function(){
 	return this.ports;
 }
-MachineConnecteur.prototype.getMAC = function(nomMachine){
+Materiel.prototype.getMAC = function(nomMachine){
 	var mac,
 		i = 0;
 	while(!mac, i < this.ctr){
@@ -140,10 +145,17 @@ MachineConnecteur.prototype.getMAC = function(nomMachine){
 	return mac;
 }
 //setters
-MachineConnecteur.prototype.setNbrPorts = function(nbr){
+Materiel.prototype.setNbrPorts = function(nbr){
 	this.nbrPorts = nbr;
 }
-MachineConnecteur.prototype.ajouterPorts = function(ports){
+Materiel.prototype.setPorts = function(){
+	for(var i=0; i < this.nbrPorts; i++){
+		this.ports[i] = new Port(i);
+	}
+}
+
+//autres
+Materiel.prototype.ajouterPorts = function(ports){
 	for(var i=0; i < arguments.length; i++){
 		if(arguments[i] instanceof Port && this.ctr < this.nbrPorts){
 			this.ports[this.ctr] = arguments[i];
@@ -151,4 +163,18 @@ MachineConnecteur.prototype.ajouterPorts = function(ports){
 		}// else envoyer message d'erreur à faire...
 		
 	}
+}
+/* trouver si une Machine est connectée à ce port
+	paramètre : la Machine à tester ;
+	retour : booleen ;
+*/
+Materiel.prototype.estConnexion = function(machine){
+	var rep = false,
+		i = 0;
+	while (rep == false && i < this.ports.length){
+		if ( this.ports[i].estConnecte(machine))
+			rep = this.ports[i].estConnecte(machine);
+			i++;
+	}
+	return rep;
 }
