@@ -327,7 +327,7 @@ function transmettreSwitch(evt){
 		recepteur.addEventListener("mouseout", styleMouseOut);
 		recepteur.addEventListener("click", recevoirTrame);
 	}else{
-		switch(ctrlHub){
+		switch(ctrlHub){//la variable qui se souvient du hub précédent
 			case hub0 :
 					if(hub1.estConnexion(sujet[1])){
 						document.getElementById('hub_1').addEventListener("mouseover", styleMouseOver);

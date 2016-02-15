@@ -1,0 +1,17 @@
+<!--
+	Paramétrage réseau : stocke les données propres à un (ou plusieurs) schéma(s) de réseau
+	Ce fichier est utilisé par le Constructeur de schéma réseau afin de
+	définir :
+		1) le nombre de MachinesConnectee(s) : serveurs et / ou clients ;
+		2) les adresses MAC
+		3) le nombre de Materiel(s) d'interconnexion : hubs et / ou switches ;
+		4) le nombre de ports par Materiel ;
+-->
+<schema id="schema_0" nbrClients="4" nbrServeurs="2" nbrHubs="2" nbrPortsHub="4" nbrSwitches="1" nbrPortsSwitch="4">
+	<mac>xx:xx:xx:xx:xx:x0</mac>
+	<mac>xx:xx:xx:xx:xx:x1</mac>
+	<mac>xx:xx:xx:xx:xx:x2</mac>
+	<mac>xx:xx:xx:xx:xx:x3</mac>
+	<mac>xx:xx:xx:xx:xx:x4</mac>
+	<mac>xx:xx:xx:xx:xx:x5</mac>
+</schema>

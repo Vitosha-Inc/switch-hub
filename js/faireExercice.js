@@ -1,8 +1,10 @@
-﻿var emetteur, // nbr machine émetrice
-	recepteur, // nbr machine réceptrice
+﻿var nbEmetteur, // nbr machine émetrice
+	nbRecepteur, // nbr machine réceptrice
+	em, // machine émetteur
+	rec, //machine récepteur
 	ctr = 0; // controller l'ordre des clicks
 window.onload = function(){
-	document.getElementById("realiserExercice").addEventListener("click", afficherReseau);
+	document.getElementById("faireExercice").addEventListener("click", afficherReseau);
 }
 function afficherReseau(evt){
 	evt.preventDefault();
@@ -30,7 +32,7 @@ function afficherReseau(evt){
 	afficherSujet();
 	
 	//trouver l'émetteur
-	switch (emetteur) {
+	switch (nbEmetteur) {
 		case 1 :
 			em = client_1;
 			break;
@@ -46,7 +48,7 @@ function afficherReseau(evt){
 	}
 	
 	//trouver le récepteur
-	switch (recepteur) {
+	switch (nbRecepteur) {
 		case 1 :
 			rec = serveur_1;
 			break;
@@ -57,27 +59,28 @@ function afficherReseau(evt){
 	
 	//attacher les gestionnaires d'événements
 	gestionEvenements(em, switch_1, rec);
-
+	
 }
 
 function afficherSujet(){
-	emetteur = Math.round(Math.random()*4);
-	recepteur = Math.round(Math.random()*2);
-	if(emetteur == 0){
-		emetteur = 1;
+	nbEmetteur = Math.round(Math.random()*4);
+	nbRecepteur = Math.round(Math.random()*2);
+	if(nbEmetteur == 0){
+		nbEmetteur = 1;
 	}
-	if(recepteur == 0){
-		recepteur = 1;
+	if(nbRecepteur == 0){
+		nbRecepteur = 1;
 	}
-	var text = "<p>Emetteur : " + emetteur + "</p>";
-	text += "<p>Recepteur : " + recepteur + "</p>";
-	document.getElementById("consignes").innerHTML = text; 
+	var texte = "<p>Emetteur : " + nbEmetteur + "</p>";
+	texte += "<p>Recepteur : " + nbRecepteur + "</p>";
+	document.getElementById("contenu").innerHTML = texte; 
 }
 
 function gestionEvenements(em, tr, rec){
 	em.click(function(){
 		if (ctr==0){
 			window.alert("emetteur");
+			afficheTestEmis();
 			ctr++;
 			//em.attr({});
 		}
@@ -93,6 +96,34 @@ function gestionEvenements(em, tr, rec){
 			window.alert("récepteur");
 			window.alert("Bravo !");
 			ctr = 0;
+		}
+	});
+}
+
+//affiche le tableau de la machine émetrice
+function afficheTestEmis(nbEmetteur, nbRecepteur){
+	$("#contenu").load('testemis.html');
+	document.getElementById("machine").innerHTML="<h2>Emetteur : machine "+nbEmetteur+"</h2><h2>Récepteur : machine"+nbRecepteur+"</h2>";
+	effectueTestEmis(nbEmetteur, nbRecepteur);
+}
+
+function effectueTestEmis(em, rec){
+	$("#emForm").submit(function(event){
+		event.preventDefault();
+		console.log(emetteur.value+" = "+em);
+		console.log(recepteur.value+" = "+rec);
+		if(em!=emetteur.value){
+			if(rec!=recepteur.value){
+			window.alert("Les adresses de l'émetteur et du récepteur ne sont pas correctes!");
+			}else{
+			window.alert("L'adresse de l'émetteur n'est pas la bonne!");
+			}
+		}else{
+		if(rec!=recepteur.value){
+			window.alert("L'adresse du récepteur n'est pas la bonne!");
+			}else{
+			window.alert("OK -> étape suivante");
+			}
 		}
 	});
 }
