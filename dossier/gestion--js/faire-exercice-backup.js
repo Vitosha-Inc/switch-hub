@@ -49,6 +49,11 @@ sw0.ports[2].connecter(sv0);
 sw0.ports[3].connecter(sv1);
 console.log(sw0);
 
+//Variables de test pour connaitre le chemin de la trame
+var cheminTest = "Chemin de la trame : ";//Chemin de la trame
+var next="";//Materiel suivant le switch dans le chemin de la trame
+var chemin = new Array; //Tableau contenant les matériels du chemin de la trame
+
 /*
 	ONLOAD c'est ici
 */
@@ -176,7 +181,9 @@ function choisirSujet(){
 //emettre une trame
 function emettre(evt){
 	//afficher le tableau de la trame
-	if (avancee = "definit"){
+	cheminTest+=sujet[0].getNom();console.log(cheminTest);//TEST CHEMIN
+	chemin[0]=sujet[0].getNom();//Tableau du chemin
+	if (avancee == "definit"){
 		evt.target.setAttribute("fill", "red");
 		evt.target.removeEventListener("click", emettre);
 		evt.target.removeEventListener("mouseout", styleMouseOut);
@@ -260,11 +267,15 @@ function validerEmission(evt){
 			document.getElementById('hub_0').addEventListener("mouseout", styleMouseOut);
 			document.getElementById('hub_0').addEventListener("click", transmettreHub);
 			ctrlHub = hub0;
+			cheminTest+="->"+'hub_0';console.log(cheminTest);//TEST CHEMIN
+			chemin[1]='hub_0';
 		}else{
 			document.getElementById('hub_1').addEventListener("mouseover", styleMouseOver);
 			document.getElementById('hub_1').addEventListener("mouseout", styleMouseOut);
 			document.getElementById('hub_1').addEventListener("click", transmettreHub);
 			ctrlHub = hub1;
+			cheminTest+="->"+'hub_1';console.log(cheminTest);//TEST CHEMIN
+			chemin[1]='hub_1';
 		}
 	}else{
 		texte = "<p>Les adresses ne sont pas correctes.</p>"
@@ -290,11 +301,17 @@ function transmettreHub(evt){
 				recepteur.addEventListener("mouseover", styleMouseOver);
 				recepteur.addEventListener("mouseout", styleMouseOut);
 				recepteur.addEventListener("click", recevoirTrame);
+				cheminTest+="->"+sujet[1].getNom();console.log(cheminTest);//TEST CHEMIN
+				chemin[2]=sujet[1];
 			}else{
 				
 				document.getElementById('switch_0').addEventListener("mouseover", styleMouseOver);
 				document.getElementById('switch_0').addEventListener("mouseout", styleMouseOut);
 				document.getElementById('switch_0').addEventListener("click", transmettreSwitch);
+				if(sw0.estConnexion(sujet[1])){next = sujet[1].getNom();} else {next = 'hub_1';};//TEST CHEMIN
+				cheminTest+="->"+'switch_0'+"->"+next;console.log(cheminTest);//TEST CHEMIN
+				chemin[2]='switch_0';
+				chemin[3]=next;
 			}
 			break;
 		case "hub_1" :
@@ -302,10 +319,16 @@ function transmettreHub(evt){
 				recepteur.addEventListener("mouseover", styleMouseOver);
 				recepteur.addEventListener("mouseout", styleMouseOut);
 				recepteur.addEventListener("click", recevoirTrame);
+				cheminTest+="->"+sujet[1].getNom();console.log(cheminTest);//TEST CHEMIN
+				chemin[2]=sujet[1];
 			}else{
 				document.getElementById('switch_0').addEventListener("mouseover", styleMouseOver);
 				document.getElementById('switch_0').addEventListener("mouseout", styleMouseOut);
 				document.getElementById('switch_0').addEventListener("click", transmettreSwitch);
+				if(sw0.estConnexion(sujet[1])){next = sujet[1].getNom();} else {next = 'hub_0';};//TEST CHEMIN
+				cheminTest+="->"+'switch_0'+"->"+next;console.log(cheminTest);//TEST CHEMIN
+				chemin[2]='switch_0';
+				chemin[3]=next;
 			}
 			break;
 	}
@@ -321,6 +344,13 @@ function transmettreSwitch(evt){
 	evt.target.removeEventListener("mouseover", styleMouseOver);
 	evt.target.removeEventListener("mouseout", styleMouseOut);
 	evt.target.removeEventListener("click", transmettreSwitch);
+	evt.preventDefault();
+		$('#contenu').load("switch.html", null, function(){ //la fonction s'execute lorsque le load est fait
+			$('#emetteur').html(sujet[0].getNom());
+			$('#recepteur').html(sujet[1].getNom());
+			$('#eltPreDiv').html(chemin[1]);
+			$('#eltSuiDiv').html(chemin[3]);
+		});
 	
 	if(sw0.estConnexion(sujet[1])){
 		recepteur.addEventListener("mouseover", styleMouseOver);

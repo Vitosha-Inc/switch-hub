@@ -6,10 +6,10 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 	<style>
-	body {
+	<!---body {
 	background-color:#821e46;
 	color:white;
-	}
+	}-->
 	
 	input{
 	color:#222;
@@ -34,15 +34,27 @@
 	}
 	
 	legend{
-	color:#fee;
+	color:#825;
 	font-size:14px;
 	}
 	
-	input[type=submit]{
+	#validerSwitch {
 	background-color:#821e46;
 	border-color:white;
 	color:white;
-	font-size:15px;
+	font-size:20px;
+	width:150px;
+	float:right;
+	text-align:center;
+	vertical-align:middle;
+	height:40px;
+	}
+	
+	#validerSwitch:hover {
+	background-color:#A43f68;
+	border:white;
+	color:white;
+	font-size:20px;
 	}
 	
 	span{
@@ -53,16 +65,18 @@
 </head>
 <body>
 <div id="machine">
-<h2>Switch</h2>
+<h2>Switch</h2>Emetteur :<div id="emetteur"></div></br>Récepteur :<div id="recepteur"></div>
 </div>
 
-<div id="infos"></div><!--- Div provisoire pour indiquer le chemin de la trame --->
+<div id="infos">"La trame est reçue en <span>port <span id="portEmInfo"></span> </span> et devrait être transmise en <span>port <span id="portReInfo"></span> </span>"</div><!--- Div provisoire pour indiquer le chemin de la trame --->
+<div id="eltPreDiv" style="visibility:hidden;"></div>
+<div id="eltSuiDiv" style="visibility:hidden;"></div>
 
 <div id="trame" class="col-lg-12 col-xs-12">
 <form id="trameRec">
 <legend>Trame reçue : </legend>
-<input type="text" id="recepteur" disabled="disabled" value="adresse recepteur"></input>
-<input type="text" id="emetteur" disabled="disabled" value="adresse emetteur"></input>
+<input type="text" id="recepteurAdresse" disabled="disabled" value="adresse recepteur"></input>
+<input type="text" id="emetteurAdresse" disabled="disabled" value="adresse emetteur"></input>
 <input type="text" disabled="disabled" value="Couches supérieures"></input>
 <input type="text" disabled="disabled" value="FCS"></input>
 </form>
@@ -83,17 +97,19 @@
 <tr><td>Adresse MAC</td>
 <td>Port</td></tr>
 <td><select name='emetteurSwitch' id="emetteurSwitch">
-	<option value="Machine 1">Machine 1 : 00-C0-B0-69-16-11</option>
-	<option value="Machine 2">Machine 2 : 00-C0-B0-08-31-22</option>
-	<option value="Machine 3">Machine 3 : 00-10-2B-88-00-33</option>
-	<option value="Machine 4">Machine 4 : 00-00-48-24-E5-44</option>
-	<option value="Machine 5">Machine 5 : 00-AA-00-95-A0-55</option>
-	<option value="Machine 6">Machine 6 : 00-F0-00-6A-11-66</option>
-	<option value="Serveur A">Serveur A : 00-35-8A-96-01-AA</option>
-	<option value="Serveur B">Serveur B : 02-35-5A-66-64-BB</option>
-	<option value="Broadcast">Broadcast : FF-FF-FF-FF-FF-FF</option>
+	<option value="defaut">Choisissez une adresse</option>
+	<option value="client_0">client_0 MAC :</option>
+	<option value="client_1">client_1 MAC :</option>
+	<option value="client_2">client_2 MAC :</option>
+	<option value="client_3">client_3 MAC :</option>
+	<!--<option value="Machine 5">Machine 5 : 00-AA-00-95-A0-55</option>
+	<option value="Machine 6">Machine 6 : 00-F0-00-6A-11-66</option>-->
+	<option value="serveur_0">serveur_0 MAC :</option>
+	<option value="serveur_1">serveur_1 MAC :</option>
+	<!--<option value="Broadcast">Broadcast : FF-FF-FF-FF-FF-FF</option>-->
 </select></td>
 <td><select name='port' id="port">
+	<option value="defaut">Choisissez un port</option>
 	<option value="1">1</option>
 	<option value="2">2</option>
 	<option value="3">3</option>
@@ -125,22 +141,22 @@
 </tr>
 </table>
 </div>
-
-<form class="col-lg-12 col-xs-12">
-<input type="submit" id="validerSwitch" name="valider_switch" value="Valider"/>
-</form>
+<div style="clear:both;"></div>
+<div class="col-lg-8 col-xs-8" id="validerSwitch">
+Valider
+</div>
 
 <script type="text/javascript">
-//Emetteur-Récepteur qui sera défini par le sujet de l'exercice
-var nomEm = "Machine 1";
-var nomRe = "Serveur A";
-
+//Sera modifié par le XML, juste à titre d'indication pour l'instant
 var adrEm = "00-C0-B0-69-16-11";
 var adrRe = "00-35-8A-96-01-AA";
 
-var portRe = "2";
-var portEm = "1";
+var portRe;
+var portEm;
+var nC;
 
+var eltPre;
+var eltSui;
 
 //Test Afficher ce qui doit être checked
 //reception
@@ -156,11 +172,31 @@ var tabProp = new Array;//Valeurs proposées par l'utilisateur
 
 
 $(document).ready(function() {
+eltPre = document.getElementById("eltPreDiv").textContent;
+eltSui = document.getElementById("eltSuiDiv").textContent;
+//Connaitre les ports de reception/transmission
+console.log("eltPre = "+document.getElementById("eltPreDiv").textContent);//debug
+console.log("eltSui = "+document.getElementById("eltSuiDiv").textContent);//debug
+for(var lol=0;lol<sw0.ports.length;lol++){
+nC = sw0.ports[lol].getConnexion().nom;
+console.log("nC = "+nC);//debug
+if(nC==document.getElementById("eltPreDiv").textContent){portRe=lol+1;
+console.log("portRe = "+portRe);//debug
+}
+else if(nC==document.getElementById("eltSuiDiv").textContent){portEm=lol+1;
+console.log("portEm = "+portEm);//debug
+}
+}
+
+
 //Partie qui sera intégrée dans la sidebar
-document.getElementById("machine").innerHTML="<h2>Switch</h2>Emetteur :"+nomEm+"</br>Récepteur :"+nomRe;
-document.getElementById("infos").innerHTML="La trame est reçue en <span>port "+portEm+"</span> et devrait être transmise en <span>port "+portRe+"</span>";
-document.getElementById("emetteur").setAttribute("value",adrEm);
-document.getElementById("recepteur").setAttribute("value",adrRe);
+//document.getElementById("machine").innerHTML="<h2>Switch</h2>Emetteur :"+nomEm+"</br>Récepteur :"+nomRe;
+document.getElementById("portEmInfo").innerHTML=portEm;
+document.getElementById("portReInfo").innerHTML=portRe;
+document.getElementById("emetteurAdresse").setAttribute("value",adrEm);
+document.getElementById("recepteurAdresse").setAttribute("value",adrRe);
+
+
 
 //Tableau contenant les ports et la valeur attendue
 for(var i=0;i<8;i++){
@@ -186,6 +222,8 @@ console.log(document.getElementsByName("valPorts")[k].value+" : "+document.getEl
 
 document.getElementById("ports").onclick=function(){(console.log("click!"))};//debug
 
+
+<!------------------------VALIDATION DU SWITCH--------------------------------------!>
 function validerSwitch(e){
 e.preventDefault();
 
@@ -212,8 +250,16 @@ erreur++;
 }
 //---
 
+/*---TEST DE VALIDATION---*/
 //On teste si l'adresse MAC est bonne, si le port de réception est le bon et s'il n'y a pas d'erreurs pour le tableau des ports
 var message;
+
+//Emetteur-Récepteur qui sera défini par le sujet de l'exercice
+var nomEm = document.getElementById("emetteur").innerText;
+var nomRe = document.getElementById("recepteur").innerText;
+
+console.log("emetteurSwitch.value = "+emetteurSwitch.value);
+console.log("nomEm = "+nomEm);
 if(emetteurSwitch.value==nomEm && port.value==portEm && erreur==0){
 console.log("ok");
 message = "Ok -> étape suivante";

@@ -21,9 +21,7 @@ console.log (c);//debug
 //plus tard ces machines peuvent etre rassemblees dans un tableau
 var nbrClients = 4,
 	nbrHubs = 2,
-	nbrPortsHub = 4,
 	nbrSwitches = 1,
-	nbrPortsSwitch = 4,
 	nbrServeurs = 2,
 	adressesMAC = new Array(nbrClients + nbrServeurs),
 	//hubs = new Array(nbrHubs),
@@ -113,7 +111,7 @@ function faireExercice(evt){
 	emetteur = document.getElementById(sujet[0].getNom());
 	recepteur = document.getElementById(sujet[1].getNom());
 	console.log(emetteur, recepteur);//debug
-	emetteur.addEventListener("mouseover", styleMouseOver);//cela ne marche pas - il n'attache pas les écouteurs d'événements
+	emetteur.addEventListener("mouseover", styleMouseOver);//cela ne marche pas
 	emetteur.addEventListener("mouseout", styleMouseOut);
 	
 	emetteur.addEventListener("click", emettre);
@@ -387,8 +385,6 @@ function recevoirTrame(evt){
 	recepteur.removeEventListener("mouseout", styleMouseOut);
 	recepteur.removeEventListener("click", recevoirTrame);
 	window.alert(avancee);
-	
-	// pour commencer un autre sujet (mais cela ne marche pas encore)
 	/*if(ctrlSujets != nbrSujets)
 		refaireExercice();
 	else{
